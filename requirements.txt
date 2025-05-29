@@ -1,0 +1,14 @@
+pdf2image
+PyMuPDF
+mss
+pillow
+pyautogui
+pytesseract
+sqlalchemy
+python-docx
+imageio
+keyboard
+pygame
+pystray
+numpy
+requests
