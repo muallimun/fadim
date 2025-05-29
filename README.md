@@ -90,7 +90,6 @@ Pull requests and issue reports are welcome!
 
 ## 🌐 Web Sitesi
 
-🔗 [https://muallimun.com/muallim/listekolay/fadim/](https://muallimun.com/muallim/listekolay/fadim/)
+🔗 [https://muallimun.com/fadim/](https://muallimun.com/fadim/)
 
 ---
-
