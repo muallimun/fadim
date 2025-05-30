@@ -12,3 +12,4 @@ pygame
 pystray
 numpy
 requests
+pywin32
