@@ -32,7 +32,7 @@ FADIM (Fotoğrafı Al, Dönüştür, İndeksle, Metne) masaüstü için gelişti
 
 ## 🔧 Kurulum | Installation
 
-1. [En son sürümü indir](https://muallimun.com/muallim/listekolay/fadim/)  
+1. [En son sürümü indir](https://github.com/muallimun/fadim/releases/download/2.0.0/Fadim_v.2.0.exe)  
    Download the latest version
 
 2. İndirilen `.exe` dosyasını çalıştırın.  
