@@ -226,7 +226,29 @@ LANGUAGES = {
         # Yardım penceresi
         'help_title': "📖 FADIM Kullanım Kılavuzu",
         'help_basic_usage': "Temel Kullanım",
-        'help_shortcuts': "Klavye Kısayolları",
+        'help_shortcuts': "Kısayol Tuşları",
+        'help_shortcuts_content': """⌨️ Kısayol Tuşları
+
+🎯 Ana Kısayollar:
+• Ctrl+Shift+F: Ekran yakalama (varsayılan)
+• ESC: GIF kaydını durdur
+
+🔧 Kısayol Değiştirme:
+1. Ayarlar > Ayarları Düzenle menüsüne gidin
+2. "Girdi & İmleç" sekmesini açın
+3. Yeni kısayol kombinasyonunu yazın
+4. Ayarları Kaydet butonuna tıklayın
+
+📝 Kısayol Formatları:
+• ctrl+shift+f (Ctrl, Shift, F birlikte)
+• alt+s (Alt + S)
+• ctrl+alt+c (Ctrl, Alt, C birlikte)
+• f1, f2, f3... (Fonksiyon tuşları)
+
+⚠️ Önemli Notlar:
+• Sistem kısayolları ile çakışmasına dikkat edin
+• Geçersiz kombinasyonlar hata verebilir
+• Değişiklikler hemen aktif olur""",
         'tesseract_help_title': "🔧 Tesseract OCR Kurulum Rehberi",
         'tesseract_windows': "Windows Kurulumu",
         'tesseract_linux': "Linux Kurulumu", 
@@ -491,7 +513,29 @@ LANGUAGES = {
         # Help window
         'help_title': "📖 FADIM User Guide",
         'help_basic_usage': "Basic Usage",
-        'help_shortcuts': "Keyboard Shortcuts",
+        'help_shortcuts': "Hotkeys",
+        'help_shortcuts_content': """⌨️ Hotkeys
+
+🎯 Main Hotkeys:
+• Ctrl+Shift+F: Screen capture (default)
+• ESC: Stop GIF recording
+
+🔧 Changing Hotkeys:
+1. Go to Settings > Edit Settings menu
+2. Open "Input & Cursor" tab
+3. Write new hotkey combination
+4. Click Save Settings button
+
+📝 Hotkey Formats:
+• ctrl+shift+f (Ctrl, Shift, F together)
+• alt+s (Alt + S)
+• ctrl+alt+c (Ctrl, Alt, C together)
+• f1, f2, f3... (Function keys)
+
+⚠️ Important Notes:
+• Be careful not to conflict with system hotkeys
+• Invalid combinations may cause errors
+• Changes take effect immediately""",
         'tesseract_help_title': "🔧 Tesseract OCR Installation Guide",
         'tesseract_windows': "Windows Installation",
         'tesseract_linux': "Linux Installation",
@@ -756,7 +800,29 @@ LANGUAGES = {
         # نافذة المساعدة
         'help_title': "📖 دليل مستخدم فاديم",
         'help_basic_usage': "الاستخدام الأساسي",
-        'help_shortcuts': "اختصارات لوحة المفاتيح",
+        'help_shortcuts': "اختصارات المفاتيح",
+        'help_shortcuts_content': """⌨️ اختصارات المفاتيح
+
+🎯 الاختصارات الرئيسية:
+• Ctrl+Shift+F: التقاط الشاشة (افتراضي)
+• ESC: إيقاف تسجيل GIF
+
+🔧 تغيير الاختصارات:
+1. اذهب إلى الإعدادات > تعديل الإعدادات
+2. افتح تبويب "الإدخال والمؤشر"
+3. اكتب تركيبة اختصار جديدة
+4. اضغط على زر حفظ الإعدادات
+
+📝 تنسيقات الاختصارات:
+• ctrl+shift+f (Ctrl, Shift, F معاً)
+• alt+s (Alt + S)
+• ctrl+alt+c (Ctrl, Alt, C معاً)
+• f1, f2, f3... (مفاتيح الوظائف)
+
+⚠️ ملاحظات مهمة:
+• احذر من التعارض مع اختصارات النظام
+• التركيبات غير الصحيحة قد تسبب أخطاء
+• التغييرات تصبح فعالة فوراً""",
         'tesseract_help_title': "🔧 دليل تثبيت Tesseract OCR",
         'tesseract_windows': "تثبيت Windows",
         'tesseract_linux': "تثبيت Linux",

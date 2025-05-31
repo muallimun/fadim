@@ -11,6 +11,27 @@ import platform
 import subprocess
 import logging
 
+# Windows'ta console penceresini gizle (EXE derlemesi için)
+if platform.system() == "Windows":
+    try:
+        import ctypes
+        import ctypes.wintypes
+        
+        # Windows console penceresini gizle
+        kernel32 = ctypes.windll.kernel32
+        user32 = ctypes.windll.user32
+        
+        SW_HIDE = 0
+        SW_SHOW = 5
+        
+        # Console penceresini gizle
+        console_window = kernel32.GetConsoleWindow()
+        if console_window:
+            user32.ShowWindow(console_window, SW_HIDE)
+    except Exception as e:
+        # Hata durumunda sessizce devam et
+        pass
+
 # Kritik modüllerin varlığını kontrol et
 try:
     import requests
@@ -143,44 +164,50 @@ def show_tesseract_installation_guide(current_language='tr'):
     # Dil bazında başlık
     if current_language == 'tr':
         guide_window.title("🔧 Tesseract OCR Kurulum Rehberi")
-        system_title = f"🖥️ {system} İçin Tesseract Kurulumu"
-        steps_title = "📋 Kurulum Adımları"
         close_text = "❌ Kapat"
         download_text = "💾 Windows İndir"
         website_text = "🌐 Resmi Site"
+        windows_tab_text = "Windows Kurulumu"
+        linux_tab_text = "Linux Kurulumu"
     elif current_language == 'en':
         guide_window.title("🔧 Tesseract OCR Installation Guide")
-        system_title = f"🖥️ Tesseract Installation for {system}"
-        steps_title = "📋 Installation Steps"
         close_text = "❌ Close"
         download_text = "💾 Download Windows"
         website_text = "🌐 Official Website"
+        windows_tab_text = "Windows Installation"
+        linux_tab_text = "Linux Installation"
     else:  # Arabic
         guide_window.title("🔧 دليل تثبيت Tesseract OCR")
-        system_title = f"🖥️ تثبيت Tesseract لـ {system}"
-        steps_title = "📋 خطوات التثبيت"
         close_text = "❌ إغلاق"
         download_text = "💾 تحميل Windows"
         website_text = "🌐 الموقع الرسمي"
+        windows_tab_text = "تثبيت Windows"
+        linux_tab_text = "تثبيت Linux"
 
-    guide_window.geometry("600x500")
+    guide_window.geometry("650x550")
     guide_window.resizable(True, True)
     guide_window.attributes('-topmost', True)  # Her zaman üstte
 
     main_frame = ttk.Frame(guide_window)
     main_frame.pack(fill='both', expand=True, padx=15, pady=15)
 
-    # Başlık
-    ttk.Label(main_frame, text=system_title, 
-              font=('Arial', 14, 'bold')).pack(pady=(0, 15))
+    # Notebook (Sekmeli yapı)
+    notebook = ttk.Notebook(main_frame)
+    notebook.pack(fill='both', expand=True, pady=(0, 10))
 
-    # Adımlar
-    steps_frame = ttk.LabelFrame(main_frame, text=steps_title)
-    steps_frame.pack(fill='both', expand=True, pady=(0, 10))
+    # Windows sekmesi
+    windows_frame = ttk.Frame(notebook)
+    notebook.add(windows_frame, text=windows_tab_text)
 
-    if system == "Windows":
-        if current_language == 'tr':
-            steps_text = """1️⃣ İndirme:
+    windows_text_frame = ttk.Frame(windows_frame)
+    windows_text_frame.pack(fill='both', expand=True, padx=10, pady=10)
+
+    if current_language == 'tr':
+        windows_content = """🖥️ Windows İçin Tesseract Kurulumu
+
+📋 Kurulum Adımları:
+
+1️⃣ İndirme:
    • Aşağıdaki 'Windows İndir' butonuna tıklayın
    • tesseract-ocr-w64-setup-5.3.x.exe dosyasını indirin
 
@@ -200,8 +227,12 @@ def show_tesseract_installation_guide(current_language='tr'):
    • Komut istemi açın (cmd)
    • 'tesseract --version' yazın
    • Sürüm görünürse başarılı!"""
-        elif current_language == 'en':
-            steps_text = """1️⃣ Download:
+    elif current_language == 'en':
+        windows_content = """🖥️ Tesseract Installation for Windows
+
+📋 Installation Steps:
+
+1️⃣ Download:
    • Click 'Download Windows' button below
    • Download tesseract-ocr-w64-setup-5.3.x.exe file
 
@@ -221,8 +252,12 @@ def show_tesseract_installation_guide(current_language='tr'):
    • Open command prompt (cmd)
    • Type 'tesseract --version'
    • If version appears, installation successful!"""
-        else:  # Arabic
-            steps_text = """1️⃣ التحميل:
+    else:  # Arabic
+        windows_content = """🖥️ تثبيت Tesseract لـ Windows
+
+📋 خطوات التثبيت:
+
+1️⃣ التحميل:
    • اضغط على زر 'تحميل Windows' أدناه
    • حمل ملف tesseract-ocr-w64-setup-5.3.x.exe
 
@@ -242,72 +277,132 @@ def show_tesseract_installation_guide(current_language='tr'):
    • افتح موجه الأوامر (cmd)
    • اكتب 'tesseract --version'
    • إذا ظهر الإصدار، التثبيت ناجح!"""
-    else:  # Linux/Mac
-        if current_language == 'tr':
-            steps_text = """1️⃣ Terminal Açın:
-   • Ctrl+Alt+T ile terminal açın
 
-2️⃣ Kurulum Komutları:
-   Ubuntu/Debian:
-   sudo apt update
-   sudo apt install tesseract-ocr tesseract-ocr-tur tesseract-ocr-ara
+    # Windows sekmesi için kopyalanabilir metin alanı
+    windows_text_widget = scrolledtext.ScrolledText(windows_text_frame, wrap=tk.WORD, font=('Courier', 9), height=15)
+    windows_text_widget.pack(fill='both', expand=True)
+    windows_text_widget.insert(tk.END, windows_content)
+    windows_text_widget.config(state='disabled')  # Sadece okunabilir
 
-   CentOS/RHEL:
-   sudo yum install tesseract tesseract-langpack-tur
+    # Linux sekmesi
+    linux_frame = ttk.Frame(notebook)
+    notebook.add(linux_frame, text=linux_tab_text)
 
-   Fedora:
-   sudo dnf install tesseract tesseract-langpack-tur
+    linux_text_frame = ttk.Frame(linux_frame)
+    linux_text_frame.pack(fill='both', expand=True, padx=10, pady=10)
 
-3️⃣ Test:
-   tesseract --version
-   tesseract --list-langs"""
-        elif current_language == 'en':
-            steps_text = """1️⃣ Open Terminal:
-   • Open terminal with Ctrl+Alt+T
+    if current_language == 'tr':
+        linux_content = """🐧 Linux İçin Tesseract OCR Kurulumu
 
-2️⃣ Installation Commands:
-   Ubuntu/Debian:
-   sudo apt update
-   sudo apt install tesseract-ocr tesseract-ocr-tur tesseract-ocr-ara
+📦 Ubuntu/Debian:
+sudo apt update
+sudo apt install tesseract-ocr
+sudo apt install tesseract-ocr-tur  # Türkçe dil paketi
+sudo apt install tesseract-ocr-ara  # Arapça dil paketi
 
-   CentOS/RHEL:
-   sudo yum install tesseract tesseract-langpack-tur
+📦 CentOS/RHEL/Fedora:
+sudo yum install tesseract tesseract-langpack-tur
+# veya
+sudo dnf install tesseract tesseract-langpack-tur
 
-   Fedora:
-   sudo dnf install tesseract tesseract-langpack-tur
+📦 Arch Linux:
+sudo pacman -S tesseract tesseract-data-tur tesseract-data-ara
 
-3️⃣ Test:
-   tesseract --version
-   tesseract --list-langs"""
-        else:  # Arabic
-            steps_text = """1️⃣ افتح الطرفية:
-   • افتح الطرفية بـ Ctrl+Alt+T
+✅ Kurulum Testi:
+tesseract --version
+tesseract --list-langs
 
-2️⃣ أوامر التثبيت:
-   Ubuntu/Debian:
-   sudo apt update
-   sudo apt install tesseract-ocr tesseract-ocr-tur tesseract-ocr-ara
+🔧 Dil Paketi Kontrolü:
+Desteklenen dilleri görmek için:
+tesseract --list-langs
 
-   CentOS/RHEL:
-   sudo yum install tesseract tesseract-langpack-tur
+Çıktıda 'tur' (Türkçe) ve 'ara' (Arapça) görünmelidir.
 
-   Fedora:
-   sudo dnf install tesseract tesseract-langpack-tur
+📁 Manuel Kurulum:
+Dil paketlerini manuel indirmek için:
+https://github.com/tesseract-ocr/tessdata
 
-3️⃣ الاختبار:
-   tesseract --version
-   tesseract --list-langs"""
+İndirilen .traineddata dosyalarını şu klasöre koyun:
+/usr/share/tesseract-ocr/4.00/tessdata"""
+    elif current_language == 'en':
+        linux_content = """🐧 Tesseract OCR Installation for Linux
 
-    steps_label = ttk.Label(steps_frame, text=steps_text, font=('Courier', 9), justify='left')
-    steps_label.pack(anchor='w', padx=10, pady=10)
+📦 Ubuntu/Debian:
+sudo apt update
+sudo apt install tesseract-ocr
+sudo apt install tesseract-ocr-tur  # Turkish language pack
+sudo apt install tesseract-ocr-ara  # Arabic language pack
+
+📦 CentOS/RHEL/Fedora:
+sudo yum install tesseract tesseract-langpack-tur
+# or
+sudo dnf install tesseract tesseract-langpack-tur
+
+📦 Arch Linux:
+sudo pacman -S tesseract tesseract-data-tur tesseract-data-ara
+
+✅ Installation Test:
+tesseract --version
+tesseract --list-langs
+
+🔧 Language Pack Check:
+To see supported languages:
+tesseract --list-langs
+
+Output should show 'tur' (Turkish) and 'ara' (Arabic).
+
+📁 Manual Installation:
+To manually download language packs:
+https://github.com/tesseract-ocr/tessdata
+
+Place downloaded .traineddata files in:
+/usr/share/tesseract-ocr/4.00/tessdata"""
+    else:  # Arabic
+        linux_content = """🐧 تثبيت Tesseract OCR لـ Linux
+
+📦 Ubuntu/Debian:
+sudo apt update
+sudo apt install tesseract-ocr
+sudo apt install tesseract-ocr-tur  # حزمة اللغة التركية
+sudo apt install tesseract-ocr-ara  # حزمة اللغة العربية
+
+📦 CentOS/RHEL/Fedora:
+sudo yum install tesseract tesseract-langpack-tur
+# أو
+sudo dnf install tesseract tesseract-langpack-tur
+
+📦 Arch Linux:
+sudo pacman -S tesseract tesseract-data-tur tesseract-data-ara
+
+✅ اختبار التثبيت:
+tesseract --version
+tesseract --list-langs
+
+🔧 فحص حزم اللغة:
+لرؤية اللغات المدعومة:
+tesseract --list-langs
+
+يجب أن يظهر في الخرج 'tur' (التركية) و 'ara' (العربية).
+
+📁 التثبيت اليدوي:
+لتحميل حزم اللغة يدوياً:
+https://github.com/tesseract-ocr/tessdata
+
+ضع ملفات .traineddata المحملة في:
+/usr/share/tesseract-ocr/4.00/tessdata"""
+
+    # Linux sekmesi için kopyalanabilir metin alanı
+    linux_text_widget = scrolledtext.ScrolledText(linux_text_frame, wrap=tk.WORD, font=('Courier', 9), height=15)
+    linux_text_widget.pack(fill='both', expand=True)
+    linux_text_widget.insert(tk.END, linux_content)
+    linux_text_widget.config(state='disabled')  # Sadece okunabilir
 
     # Butonlar
     button_frame = ttk.Frame(main_frame)
     button_frame.pack(fill='x', pady=(10, 0))
 
-    if system == "Windows":
-        ttk.Button(button_frame, text=download_text, 
-                  command=lambda: webbrowser.open("https://digi.bib.uni-mannheim.de/tesseract/")).pack(side='left', padx=5)
+    ttk.Button(button_frame, text=download_text, 
+              command=lambda: webbrowser.open("https://digi.bib.uni-mannheim.de/tesseract/")).pack(side='left', padx=5)
 
     ttk.Button(button_frame, text=website_text, 
               command=lambda: webbrowser.open("https://github.com/tesseract-ocr/tesseract")).pack(side='left', padx=5)
@@ -2085,14 +2180,18 @@ class FADIM(tk.Tk):
         main_help_frame = ttk.Frame(help_window)
         main_help_frame.pack(fill='both', expand=True, padx=10, pady=10)
 
+        # Notebook (Sekmeli yapı) oluştur
+        notebook = ttk.Notebook(main_help_frame)
+        notebook.pack(fill='both', expand=True, pady=(0, 10))
+
         # Temel Kullanım sekmesi
-        basic_frame = ttk.Frame(main_help_frame)
+        basic_frame = ttk.Frame(notebook)
+        notebook.add(basic_frame, text=self.get_text('help_basic_usage'))
 
         basic_text = scrolledtext.ScrolledText(basic_frame, wrap=tk.WORD, font=('Arial', 10))
         basic_text.pack(fill='both', expand=True, padx=5, pady=5)
 
-        # Dil bazında içerik
-        # Applying the requested changes.
+        # Dil bazında temel kullanım içeriği
         if self.current_language == 'tr':
             help_content = """FADIM - Kullanım Kılavuzu
 
@@ -2184,79 +2283,15 @@ class FADIM(tk.Tk):
         basic_text.insert(tk.END, help_content)
         basic_text.config(state='disabled')
 
-        basic_frame.pack(fill='both', expand=True)
-
-        # Kısayol Tuşları sekmesi  
-        shortcuts_frame = ttk.Frame(main_help_frame)
+        # Kısayol Tuşları sekmesi
+        shortcuts_frame = ttk.Frame(notebook)
+        notebook.add(shortcuts_frame, text=self.get_text('help_shortcuts'))
 
         shortcuts_text = scrolledtext.ScrolledText(shortcuts_frame, wrap=tk.WORD, font=('Arial', 10))
         shortcuts_text.pack(fill='both', expand=True, padx=5, pady=5)
 
-        # Dil bazında kısayol içeriği
-        if self.current_language == 'tr':
-            shortcuts_content = """⌨️ Kısayol Tuşları
-
-📷 Ctrl+Shift+F - Ekran yakalama
-🎥 Ctrl+Shift+G - GIF kayıt başlat/durdur  
-📋 Ctrl+C - Metni kopyala
-💾 Ctrl+S - TXT olarak kaydet
-📄 Ctrl+Shift+S - DOCX olarak kaydet
-🗑️ Ctrl+Delete - Metni temizle
-❌ Alt+F4 - Programı kapat
-⚙️ F10 - Ayarlar penceresi
-
-🎮 GIF Kaydı Kontrolü:
-• ESC - GIF kaydını durdur
-• F1 - Yardım penceresi
-
-💡 İpuçları:
-• Arapça metinler otomatik sağa yaslanır
-• Büyük metinler için DOCX formatını tercih edin
-• GIF kayıtları otomatik olarak optimize edilir
-• Veritabanı düzenli olarak temizlenir"""
-        elif self.current_language == 'en':
-            shortcuts_content = """⌨️ Hotkeys
-
-📷 Ctrl+Shift+F - Screen capture
-🎥 Ctrl+Shift+G - Start/stop GIF recording  
-📋 Ctrl+C - Copy text
-💾 Ctrl+S - Save as TXT
-📄 Ctrl+Shift+S - Save as DOCX
-🗑️ Ctrl+Delete - Clear text
-❌ Alt+F4 - Close program
-⚙️ F10 - Settings window
-
-🎮 GIF Recording Control:
-• ESC - Stop GIF recording
-• F1 - Help window
-
-💡 Tips:
-• Arabic texts are automatically right-aligned
-• Prefer DOCX format for large texts
-• GIF recordings are automatically optimized
-• Database is regularly cleaned"""
-        else:  # Arabic
-            shortcuts_content = """⌨️ الاختصارات
-
-📷 Ctrl+Shift+F - التقاط الشاشة
-🎥 Ctrl+Shift+G - بدء/إيقاف تسجيل GIF  
-📋 Ctrl+C - نسخ النص
-💾 Ctrl+S - حفظ كـ TXT
-📄 Ctrl+Shift+S - حفظ كـ DOCX
-🗑️ Ctrl+Delete - مسح النص
-❌ Alt+F4 - إغلاق البرنامج
-⚙️ F10 - نافذة الإعدادات
-
-🎮 التحكم في تسجيل GIF:
-• ESC - إيقاف تسجيل GIF
-• F1 - نافذة المساعدة
-
-💡 نصائح:
-• النصوص العربية تصطف تلقائياً لليمين
-• فضل صيغة DOCX للنصوص الكبيرة
-• تسجيلات GIF محسنة تلقائياً
-• قاعدة البيانات تنظف بانتظام"""
-
+        # Çoklu dil sözlüğünden içeriği al
+        shortcuts_content = self.get_text('help_shortcuts_content')
         shortcuts_text.insert(tk.END, shortcuts_content)
         shortcuts_text.config(state='disabled')
 
