@@ -62,18 +62,6 @@ FADIM (Fotoğrafı Al, Dönüştür, İndeksle, Metne) masaüstü için gelişti
 
 ---
 
-## ❓ Sık Sorulan Sorular | FAQ
-
-**OCR neden başarısız olur?**  
-🔸 Net olmayan görseller veya desteklenmeyen diller OCR sonucunu etkileyebilir.  
-🔸 Blurry images or unsupported languages may cause OCR to fail.
-
-**Çıktılar nereye kaydediliyor?**  
-🔸 Varsayılan olarak uygulamanın kurulu olduğu klasörde `outputs` adlı bir klasöre kaydedilir.  
-🔸 By default, outputs are saved in the `outputs` folder next to the application.
-
----
-
 ## 📁 Lisans | License
 
 FADIM açık kaynaklıdır ve [MIT Lisansı](LICENSE) ile lisanslanmıştır.  
